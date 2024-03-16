@@ -31,6 +31,11 @@ module todolist_addr::todolist {
   public entry fun create_task(account: &signer, content: String) acquires TodoList {
     // gets the signer address
     let signer_address = signer::address_of(account);
+    // assert signer has created a list
+    assert!(exists<TodoList>(signer_address), 1);
+
+    // gets the signer address
+    let signer_address = signer::address_of(account);
     // gets the TodoList resource
     let todo_list = borrow_global_mut<TodoList>(signer_address);
     // increment task counter
@@ -53,13 +58,18 @@ module todolist_addr::todolist {
     );
   }
 
-  public entry fun complete_task(account: &signer, task_id: u64) acquires TodoList {
+  public entry fun complete_task(account: &signer, task_id: u64) acquires TodoList {    
     // gets the signer address
     let signer_address = signer::address_of(account);
+    assert!(exists<TodoList>(signer_address), 1);
+
     // gets the TodoList resource
     let todo_list = borrow_global_mut<TodoList>(signer_address);
+    assert!(table::contains(&todo_list.tasks, task_id), 2);
+
     // gets the task matches the task_id
     let task_record = table::borrow_mut(&mut todo_list.tasks, task_id);
+    assert!(task_record.completed == false, 3)
     // update task as completed
     task_record.completed = true;
   }
