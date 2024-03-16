@@ -1,4 +1,9 @@
 module todolist_addr::todolist {
+  // Errors
+  const E_NOT_INITIALIZED: u64 = 1;
+  const ETASK_DOESNT_EXIST: u64 = 2;
+  const ETASK_IS_COMPLETED: u64 = 3;
+
   use aptos_framework::event;
   use std::string::String;
   use aptos_std::table::{Self, Table};
@@ -31,6 +36,11 @@ module todolist_addr::todolist {
   public entry fun create_task(account: &signer, content: String) acquires TodoList {
     // gets the signer address
     let signer_address = signer::address_of(account);
+    // assert signer has created a list
+    assert!(exists<TodoList>(signer_address), E_NOT_INITIALIZED);
+
+    // gets the signer address
+    let signer_address = signer::address_of(account);
     // gets the TodoList resource
     let todo_list = borrow_global_mut<TodoList>(signer_address);
     // increment task counter
@@ -53,13 +63,18 @@ module todolist_addr::todolist {
     );
   }
 
-  public entry fun complete_task(account: &signer, task_id: u64) acquires TodoList {
+  public entry fun complete_task(account: &signer, task_id: u64) acquires TodoList {    
     // gets the signer address
     let signer_address = signer::address_of(account);
+    assert!(exists<TodoList>(signer_address), E_NOT_INITIALIZED);
+
     // gets the TodoList resource
     let todo_list = borrow_global_mut<TodoList>(signer_address);
+    assert!(table::contains(&todo_list.tasks, task_id), ETASK_DOESNT_EXIST);
+
     // gets the task matches the task_id
     let task_record = table::borrow_mut(&mut todo_list.tasks, task_id);
+    assert!(task_record.completed == false, ETASK_IS_COMPLETED);
     // update task as completed
     task_record.completed = true;
   }
