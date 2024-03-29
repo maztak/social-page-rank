@@ -1,0 +1,16 @@
+[package]
+name = "social_page_rank"
+version = "1.0.0"
+authors = []
+
+[addresses]
+indexlist_addr='461b8f051c2787a9c5840bc301ebc1b8aba8a43a24a7b5c79c979fd71169d80b'
+
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dev-dependencies]
