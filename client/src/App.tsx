@@ -1,5 +1,5 @@
 import { WalletSelector } from '@aptos-labs/wallet-adapter-ant-design';
-import { Layout, Row, Col, Button, Spin, List, Checkbox, Input } from 'antd';
+import { Layout, Row, Col, Button, Spin, List, Input } from 'antd';
 import { CheckCircleIcon } from '@chakra-ui/icons';
 
 import React, { useEffect, useState } from 'react';
@@ -9,7 +9,6 @@ import {
 } from '@aptos-labs/wallet-adapter-react';
 
 import '@aptos-labs/wallet-adapter-ant-design/dist/index.css';
-import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { Aptos } from '@aptos-labs/ts-sdk';
 
 type Site = {
@@ -140,12 +139,8 @@ function App() {
     }
   };
 
-  const onCheckboxChange = async (
-    event: CheckboxChangeEvent,
-    siteId: string
-  ) => {
+  const handleClickApprove = async (siteId: string) => {
     if (!account) return;
-    if (!event.target.checked) return;
     setTransactionInProgress(true);
     const transaction: InputTransactionData = {
       data: {
@@ -240,11 +235,12 @@ function App() {
                           {site.isApproved ? (
                             <CheckCircleIcon color={'#52c41a'} />
                           ) : (
-                            <Checkbox
-                              onChange={(event) =>
-                                onCheckboxChange(event, site.site_id)
-                              }
-                            />
+                            <Button
+                              color='primary'
+                              onClick={() => handleClickApprove(site.site_id)}
+                            >
+                              Approve
+                            </Button>
                           )}
                         </div>,
                       ]}
