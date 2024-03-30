@@ -20,16 +20,17 @@ module indexlist_addr::indexlist {
     site_id: u64,
     address: address,
     domain: String,
+    isApproved: bool,
     isEvil: bool,
   }
 
   public entry fun create_index(account: &signer){
-    let sites_indexer = SiteIndex {
+    let site_index = SiteIndex {
       sites: table::new(),
       set_site_event: account::new_event_handle<Site>(account),
       site_counter: 0
     };
-    move_to(account, sites_indexer);
+    move_to(account, site_index);
   }
 
   public entry fun register_site(account: &signer, domain: String) acquires SiteIndex {
@@ -49,6 +50,7 @@ module indexlist_addr::indexlist {
       site_id: counter,
       address: signer_address,
       domain,
+      isApproved: false,
       isEvil: false
     };
     // adds the new site into the sites table
