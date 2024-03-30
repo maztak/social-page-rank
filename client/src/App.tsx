@@ -158,10 +158,10 @@ function App() {
       // wait for transaction
       await aptos.waitForTransaction({ transactionHash: response.hash });
       setSites((prevState) => {
-        const newState = prevState.map((obj) => {
+        const newState = prevState.map((obj): Site => {
           // if site_id equals the checked siteId, update completed property
           if (obj.site_id === siteId) {
-            return { ...obj, completed: true };
+            return { ...obj, isApproved: true };
           }
           // otherwise return object as is
           return obj;
