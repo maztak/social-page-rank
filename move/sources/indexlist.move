@@ -1,8 +1,8 @@
 module indexlist_addr::indexlist {
   // Errors
   const E_NOT_INITIALIZED: u64 = 1;
-  const Esite_DOESNT_EXIST: u64 = 2;
-  const Esite_IS_COMPLETED: u64 = 3;
+  const E_SITE_DOESNT_EXIST: u64 = 2;
+  const E_SITE_IS_APPROVED: u64 = 3;
 
   use aptos_framework::event;
   use std::string::String;
@@ -64,8 +64,21 @@ module indexlist_addr::indexlist {
     );
   }
 
-  // TODO: enable to call by only approver(staking?)
-  // public entry fun approve_site(account: &signer, site_id: u64) acquires SiteIndex {    
-    
-  // }
+
+  public entry fun approve_site(account: &signer, site_id: u64) acquires SiteIndex {    
+    // gets the signer address
+    let signer_address = signer::address_of(account);
+    // assert signer has created a list
+    assert!(exists<SiteIndex>(signer_address), E_NOT_INITIALIZED);
+    // gets the TodoList resource
+    let site_index = borrow_global_mut<SiteIndex>(signer_address);
+    // assert task exists
+    assert!(table::contains(&site_index.sites, site_id), E_SITE_DOESNT_EXIST);
+    // gets the task matched the task_id
+    let site_record = table::borrow_mut(&mut site_index.sites, site_id);
+    // assert task is not completed
+    assert!(site_record.isApproved == false, E_SITE_IS_APPROVED);
+    // update task as completed
+    site_record.isApproved = true;
+  }
 }
