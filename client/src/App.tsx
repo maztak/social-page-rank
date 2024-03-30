@@ -43,9 +43,9 @@ function App() {
       });
       setAccountHasList(true);
       // sites table handle
-      const tableHandle = (indexListResource as any).data.sites.handle;
+      const tableHandle = (indexListResource as any).sites.handle;
       // sites table counter
-      const siteCounter = (indexListResource as any).data.site_counter;
+      const siteCounter = (indexListResource as any).site_counter;
 
       let sites = [];
       let counter = 1;
