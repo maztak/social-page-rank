@@ -15,7 +15,8 @@ type Site = {
   site_id: string;
   address: string;
   domain: string;
-  isEvil: boolean;
+  isApproved?: boolean;
+  isEvil?: boolean;
 };
 
 export const aptos = new Aptos();
@@ -142,36 +143,36 @@ function App() {
     event: CheckboxChangeEvent,
     siteId: string
   ) => {
-    // if (!account) return;
-    // if (!event.target.checked) return;
-    // setTransactionInProgress(true);
-    // const transaction: InputTransactionData = {
-    //   data: {
-    //     function: `${moduleAddress}::indexlist::approve_site`,
-    //     functionArguments: [siteId],
-    //   },
-    // };
-    // try {
-    //   // sign and submit transaction to chain
-    //   const response = await signAndSubmitTransaction(transaction);
-    //   // wait for transaction
-    //   await aptos.waitForTransaction({ transactionHash: response.hash });
-    //   setSites((prevState) => {
-    //     const newState = prevState.map((obj) => {
-    //       // if site_id equals the checked siteId, update completed property
-    //       if (obj.site_id === siteId) {
-    //         return { ...obj, completed: true };
-    //       }
-    //       // otherwise return object as is
-    //       return obj;
-    //     });
-    //     return newState;
-    //   });
-    // } catch (error: any) {
-    //   console.log('error', error);
-    // } finally {
-    //   setTransactionInProgress(false);
-    // }
+    if (!account) return;
+    if (!event.target.checked) return;
+    setTransactionInProgress(true);
+    const transaction: InputTransactionData = {
+      data: {
+        function: `${moduleAddress}::indexlist::approve_site`,
+        functionArguments: [siteId],
+      },
+    };
+    try {
+      // sign and submit transaction to chain
+      const response = await signAndSubmitTransaction(transaction);
+      // wait for transaction
+      await aptos.waitForTransaction({ transactionHash: response.hash });
+      setSites((prevState) => {
+        const newState = prevState.map((obj) => {
+          // if site_id equals the checked siteId, update completed property
+          if (obj.site_id === siteId) {
+            return { ...obj, completed: true };
+          }
+          // otherwise return object as is
+          return obj;
+        });
+        return newState;
+      });
+    } catch (error: any) {
+      console.log('error', error);
+    } finally {
+      setTransactionInProgress(false);
+    }
   };
 
   useEffect(() => {
@@ -235,7 +236,7 @@ function App() {
                     <List.Item
                       actions={[
                         <div>
-                          {site.isEvil ? (
+                          {site.isApproved ? (
                             <Checkbox defaultChecked={true} disabled />
                           ) : (
                             <Checkbox
