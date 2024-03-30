@@ -1,5 +1,6 @@
 import { WalletSelector } from '@aptos-labs/wallet-adapter-ant-design';
 import { Layout, Row, Col, Button, Spin, List, Checkbox, Input } from 'antd';
+import { CheckCircleIcon } from '@chakra-ui/icons';
 
 import React, { useEffect, useState } from 'react';
 import {
@@ -237,7 +238,7 @@ function App() {
                       actions={[
                         <div>
                           {site.isApproved ? (
-                            <Checkbox defaultChecked={true} disabled />
+                            <CheckCircleIcon color={'#52c41a'} />
                           ) : (
                             <Checkbox
                               onChange={(event) =>
@@ -249,11 +250,20 @@ function App() {
                       ]}
                     >
                       <List.Item.Meta
-                        title={site.domain}
+                        title={
+                          <a
+                            href={`https://${site.domain}`}
+                            target='_blank'
+                            rel='noreferrer'
+                          >
+                            {site.domain}
+                          </a>
+                        }
                         description={
                           <a
                             href={`https://explorer.aptoslabs.com/account/${site.address}/`}
                             target='_blank'
+                            rel='noreferrer'
                           >{`${site.address.slice(0, 6)}...${site.address.slice(
                             -5
                           )}`}</a>
